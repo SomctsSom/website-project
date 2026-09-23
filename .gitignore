@@ -1,0 +1,18 @@
+# Environment and secrets
+wc/.env
+wa/.env
+pw/.env
+
+# Runtime
+wc/storage/sessions/*
+!wc/storage/sessions/.gitkeep
+wc/storage/logs/*
+!wc/storage/logs/.gitkeep
+wc/storage/rate_limits/*
+!wc/storage/rate_limits/.gitkeep
+wc/uploads/hero/*
+!wc/uploads/hero/.gitkeep
+!wc/uploads/hero/.htaccess
+wc/uploads/services/*
+!wc/uploads/services/.gitkeep
+!wc/uploads/services/.htaccess
