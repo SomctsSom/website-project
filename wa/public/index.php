@@ -1,0 +1,77 @@
+<?php
+declare(strict_types=1);
+
+require_once dirname(__DIR__) . '/includes/view.php';
+
+wa_start_session();
+
+$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$path = '/' . trim($path, '/');
+if ($path === '//') {
+    $path = '/';
+}
+if ($path !== '/' && str_ends_with($path, '/')) {
+    $path = rtrim($path, '/');
+}
+if ($path === '/') {
+    $path = wa_user() ? '/dashboard' : '/login';
+}
+
+// Static assets are served directly by server; this is fallback
+if (str_starts_with($path, '/assets/')) {
+    $file = __DIR__ . $path;
+    if (is_file($file)) {
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+        $types = ['css' => 'text/css', 'js' => 'application/javascript', 'png' => 'image/png', 'jpg' => 'image/jpeg', 'svg' => 'image/svg+xml'];
+        header('Content-Type: ' . ($types[$ext] ?? 'application/octet-stream'));
+        readfile($file);
+        exit;
+    }
+    http_response_code(404);
+    echo 'Not found';
+    exit;
+}
+
+$routes = [
+    '/login' => 'auth/login.php',
+    '/logout' => 'auth/logout.php',
+    '/dashboard' => 'dashboard/index.php',
+    '/account' => 'account/index.php',
+    '/users' => 'users/index.php',
+    '/users/create' => 'users/form.php',
+    '/users/edit' => 'users/form.php',
+    '/users/view' => 'users/view.php',
+    '/roles' => 'roles/index.php',
+    '/roles/create' => 'roles/form.php',
+    '/roles/edit' => 'roles/form.php',
+    '/roles/view' => 'roles/view.php',
+    '/permissions' => 'permissions/index.php',
+    '/website-menus' => 'menus/index.php',
+    '/admin-menus' => 'menus/index.php',
+    '/menus/create' => 'menus/form.php',
+    '/menus/edit' => 'menus/form.php',
+    '/menus/view' => 'menus/view.php',
+    '/website-pages' => 'pages/index.php',
+    '/admin-pages' => 'pages/index.php',
+    '/pages/create' => 'pages/form.php',
+    '/pages/edit' => 'pages/form.php',
+    '/pages/view' => 'pages/view.php',
+        '/hero' => 'hero/index.php',
+    '/hero/create' => 'hero/form.php',
+    '/hero/edit' => 'hero/form.php',
+    '/hero/view' => 'hero/view.php',
+    '/services' => 'services/index.php',
+    '/services/create' => 'services/form.php',
+    '/services/edit' => 'services/form.php',
+    '/services/view' => 'services/view.php',
+    '/trash' => 'trash/index.php',
+    '/audit-logs' => 'audit/index.php',
+];
+
+if (!isset($routes[$path])) {
+    http_response_code(404);
+    echo 'Not found';
+    exit;
+}
+
+require dirname(__DIR__) . '/pages/' . $routes[$path];
