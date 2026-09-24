@@ -98,6 +98,37 @@ try {
         'POST /api/services/restore' => 'services/restore.php',
         'POST /api/services/reorder' => 'services/reorder.php',
 
+        // Profile Overviews
+        'GET /api/profile-overviews' => 'profile_overviews/list.php',
+        'GET /api/profile-overviews/view' => 'profile_overviews/view.php',
+        'POST /api/profile-overviews/create' => 'profile_overviews/create.php',
+        'POST /api/profile-overviews/update' => 'profile_overviews/update.php',
+        'POST /api/profile-overviews/delete' => 'profile_overviews/delete.php',
+        'POST /api/profile-overviews/restore' => 'profile_overviews/restore.php',
+        'POST /api/profile-overviews/reorder' => 'profile_overviews/reorder.php',
+
+        // Vision & Mission
+        'GET /api/vision-missions' => 'vision_missions/list.php',
+        'GET /api/vision-missions/view' => 'vision_missions/view.php',
+        'POST /api/vision-missions/create' => 'vision_missions/create.php',
+        'POST /api/vision-missions/update' => 'vision_missions/update.php',
+        'POST /api/vision-missions/delete' => 'vision_missions/delete.php',
+        'POST /api/vision-missions/restore' => 'vision_missions/restore.php',
+        'POST /api/vision-missions/reorder' => 'vision_missions/reorder.php',
+
+        // Features
+        'GET /api/features' => 'features/list.php',
+        'GET /api/features/view' => 'features/view.php',
+        'POST /api/features/create' => 'features/create.php',
+        'POST /api/features/update' => 'features/update.php',
+        'POST /api/features/delete' => 'features/delete.php',
+        'POST /api/features/restore' => 'features/restore.php',
+        'POST /api/features/reorder' => 'features/reorder.php',
+
+        // Navbar colors
+        'GET /api/navbar-colors' => 'navbar_colors/index.php',
+        'POST /api/navbar-colors' => 'navbar_colors/index.php',
+
         // Trash & Audit
         'GET /api/trash' => 'trash/list.php',
         'POST /api/trash/restore' => 'trash/restore.php',
@@ -112,6 +143,10 @@ try {
         'GET /api/public/page' => 'public/page.php',
         'GET /api/public/hero' => 'public/hero.php',
         'GET /api/public/services' => 'public/services.php',
+        'GET /api/public/profile-overviews' => 'public/profile_overviews.php',
+        'GET /api/public/vision-missions' => 'public/vision_missions.php',
+        'GET /api/public/features' => 'public/features.php',
+        'GET /api/public/navbar-colors' => 'public/navbar_colors.php',
     ];
 
     $routeKey = request_method() . ' ' . $path;

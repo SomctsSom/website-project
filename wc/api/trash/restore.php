@@ -17,6 +17,9 @@ $map = [
     'pages' => ['perm' => 'pages.restore', 'endpoint_hint' => 'pages'],
     'hero' => ['perm' => 'hero.restore', 'endpoint_hint' => 'hero'],
     'services' => ['perm' => 'services.restore', 'endpoint_hint' => 'services'],
+    'profile_overviews' => ['perm' => 'profile_overviews.restore', 'endpoint_hint' => 'profile-overviews'],
+    'vision_missions' => ['perm' => 'vision_missions.restore', 'endpoint_hint' => 'vision-missions'],
+    'features' => ['perm' => 'features.restore', 'endpoint_hint' => 'features'],
 ];
 
 if (!isset($map[$module]) || $id < 1) {
@@ -26,7 +29,7 @@ if (!auth_can($actor, $map[$module]['perm'])) {
     json_error('Forbidden', 403);
 }
 
-$table = in_array($module, ['hero', 'services'], true) ? $module : $module;
+$table = $module;
 $pdo = db();
 $stmt = $pdo->prepare("SELECT * FROM `{$table}` WHERE id = :id AND deleted_at IS NOT NULL");
 $stmt->execute([':id' => $id]);

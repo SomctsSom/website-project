@@ -104,8 +104,24 @@ function wa_api_multipart(string $path, array $fields, array $file = [], string 
         $fields['_csrf'] = $csrf;
         $fields['csrf_token'] = $csrf;
     }
-    if ($file && isset($file['tmp_name']) && is_uploaded_file($file['tmp_name'])) {
-        $fields[$fileField] = new CURLFile($file['tmp_name'], $file['type'] ?? null, $file['name'] ?? 'upload');
+    // Single file (legacy): $_FILES['image'] style
+    if ($file && isset($file['tmp_name']) && !is_array($file['tmp_name'] ?? null)) {
+        if (is_uploaded_file((string) $file['tmp_name'])) {
+            $fields[$fileField] = new CURLFile($file['tmp_name'], $file['type'] ?? null, $file['name'] ?? 'upload');
+        }
+    } elseif ($file) {
+        // Multiple named files: ['image_top' => $_FILES['image_top'], ...]
+        foreach ($file as $name => $one) {
+            if (!is_array($one) || !isset($one['tmp_name']) || is_array($one['tmp_name'])) {
+                continue;
+            }
+            if ((int) ($one['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+            if (is_uploaded_file((string) $one['tmp_name'])) {
+                $fields[(string) $name] = new CURLFile($one['tmp_name'], $one['type'] ?? null, $one['name'] ?? 'upload');
+            }
+        }
     }
     $ch = curl_init($url);
     curl_setopt_array($ch, [

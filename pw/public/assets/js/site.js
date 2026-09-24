@@ -2,7 +2,61 @@ document.documentElement.classList.add('js');
 
 window.addEventListener('DOMContentLoaded', () => {
   initHeroSlider();
+  initSiteNav();
 });
+
+function initSiteNav() {
+  const root = document.querySelector('[data-site-nav]');
+  if (!root) {
+    return;
+  }
+
+  const parents = Array.from(root.querySelectorAll('.nav-item.has-children'));
+
+  const closeAll = (except = null) => {
+    parents.forEach((item) => {
+      if (except && item === except) {
+        return;
+      }
+      item.classList.remove('is-open');
+      const link = item.querySelector(':scope > .nav-link');
+      if (link) {
+        link.setAttribute('aria-expanded', 'false');
+      }
+    });
+  };
+
+  parents.forEach((item) => {
+    const link = item.querySelector(':scope > .nav-link');
+    if (!link) {
+      return;
+    }
+
+    link.addEventListener('click', (event) => {
+      // Click parent with children: toggle submenu (professional click pattern)
+      event.preventDefault();
+      const willOpen = !item.classList.contains('is-open');
+      closeAll();
+      if (willOpen) {
+        item.classList.add('is-open');
+        link.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element) || root.contains(event.target)) {
+      return;
+    }
+    closeAll();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeAll();
+    }
+  });
+}
 
 function initHeroSlider() {
   const root = document.querySelector('[data-hero-slider]');

@@ -7,9 +7,9 @@ if (wa_user()) {
 
 $error = '';
 if (request_is_post()) {
-    $email = trim((string) ($_POST['email'] ?? ''));
+    $login = trim((string) ($_POST['login'] ?? $_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
-    $res = wa_login($email, $password);
+    $res = wa_login($login, $password);
     if (wa_api_ok($res)) {
         wa_redirect('/dashboard');
     }
@@ -24,8 +24,8 @@ ob_start();
     <p class="muted">Website Admin — authenticate against Website Core</p>
     <?php if ($error): ?><div class="alert alert-error"><?= wa_e($error) ?></div><?php endif; ?>
     <form method="post" class="form-grid" style="margin-top:1rem">
-      <label class="full">Email
-        <input type="email" name="email" required autocomplete="username" value="<?= wa_e($_POST['email'] ?? '') ?>">
+      <label class="full">Name or email
+        <input type="text" name="login" required autocomplete="username" value="<?= wa_e($_POST['login'] ?? $_POST['email'] ?? '') ?>" placeholder="Super Admin or you@example.com">
       </label>
       <label class="full">Password
         <input type="password" name="password" required autocomplete="current-password">

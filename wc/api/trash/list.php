@@ -17,6 +17,9 @@ $allowed = [
     'pages' => ['table' => 'pages', 'label' => 'title', 'extra' => 'slug'],
     'hero' => ['table' => 'hero', 'label' => 'title', 'extra' => 'image_path'],
     'services' => ['table' => 'services', 'label' => 'title', 'extra' => 'image_path'],
+    'profile_overviews' => ['table' => 'profile_overviews', 'label' => 'title', 'extra' => 'image_top_path'],
+    'vision_missions' => ['table' => 'vision_missions', 'label' => 'title', 'extra' => 'statement_type'],
+    'features' => ['table' => 'features', 'label' => 'title', 'extra' => 'description'],
 ];
 
 if (!isset($allowed[$module])) {

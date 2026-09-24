@@ -5,12 +5,17 @@ require_method('POST');
 $actor = auth_require_permission('pages.create');
 auth_verify_csrf($actor);
 
-$input = request_input();
+$input = array_merge(request_input(), $_POST);
 $pageType = (string) ($input['page_type'] ?? '');
 $title = trim((string) ($input['title'] ?? ''));
 $slug = slugify((string) ($input['slug'] ?? $title));
 $templateKey = trim((string) ($input['template_key'] ?? ''));
 $isActive = isset($input['is_active']) ? to_bool_int($input['is_active'], 1) : 1;
+$bannerEyebrow = trim((string) ($input['banner_eyebrow'] ?? ''));
+$bannerTitle = trim((string) ($input['banner_title'] ?? ''));
+$bannerSubtitle = trim((string) ($input['banner_subtitle'] ?? ''));
+$bannerEnabled = array_key_exists('banner_enabled', $input) ? to_bool_int($input['banner_enabled'], 1) : 1;
+$bannerSizePreset = normalize_hero_size_preset((string) ($input['banner_size_preset'] ?? 'md'));
 
 if (!in_array($pageType, ['website', 'admin'], true)) {
     json_error('page_type must be website or admin', 422);
@@ -27,8 +32,21 @@ if (in_array($slug, $reserved, true)) {
 $approved = $pageType === 'admin'
     ? app_config('approved_admin_templates', [])
     : app_config('approved_website_templates', []);
+if ($pageType === 'website' && $templateKey === '') {
+    $templateKey = 'default';
+}
 if (!in_array($templateKey, $approved, true)) {
     json_error('template_key is not in the approved whitelist', 422);
+}
+
+$bannerImagePath = null;
+if ($pageType === 'website' && isset($_FILES['banner_image'])
+    && (int) ($_FILES['banner_image']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+    $upload = secure_upload_image($_FILES['banner_image'], 'banners');
+    if (!$upload['ok']) {
+        json_error($upload['error'], 422);
+    }
+    $bannerImagePath = $upload['relative_path'];
 }
 
 $pdo = db();
@@ -39,22 +57,38 @@ if ($dup->fetchColumn()) {
 }
 
 $stmt = $pdo->prepare(
-    'INSERT INTO pages (page_type, title, slug, template_key, is_active, created_at, created_by)
-     VALUES (:pt, :title, :slug, :tk, :active, :created, :by)'
+    'INSERT INTO pages (
+        page_type, title, slug, template_key,
+        banner_eyebrow, banner_title, banner_subtitle, banner_image_path, banner_enabled, banner_size_preset,
+        is_active, created_at, created_by
+     ) VALUES (
+        :pt, :title, :slug, :tk,
+        :be, :bt, :bs, :bi, :ben, :bsp,
+        :active, :created, :by
+     )'
 );
 $stmt->execute([
     ':pt' => $pageType,
     ':title' => $title,
     ':slug' => $slug,
     ':tk' => $templateKey,
+    ':be' => $bannerEyebrow !== '' ? $bannerEyebrow : null,
+    ':bt' => $bannerTitle !== '' ? $bannerTitle : null,
+    ':bs' => $bannerSubtitle !== '' ? $bannerSubtitle : null,
+    ':bi' => $bannerImagePath,
+    ':ben' => $pageType === 'website' ? $bannerEnabled : 0,
+    ':bsp' => $pageType === 'website' ? $bannerSizePreset : 'md',
     ':active' => $isActive,
     ':created' => now_utc(),
     ':by' => $actor['id'],
 ]);
 $id = (int) $pdo->lastInsertId();
 
-// Optional menu assignment
 $menuIds = $input['menu_ids'] ?? [];
+if (is_string($menuIds)) {
+    $decoded = json_decode($menuIds, true);
+    $menuIds = is_array($decoded) ? $decoded : [];
+}
 if (is_array($menuIds)) {
     foreach ($menuIds as $menuId) {
         $menuId = (int) $menuId;
