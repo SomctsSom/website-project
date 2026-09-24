@@ -16,3 +16,15 @@ wc/uploads/hero/*
 wc/uploads/services/*
 !wc/uploads/services/.gitkeep
 !wc/uploads/services/.htaccess
+wc/uploads/banners/*
+!wc/uploads/banners/.gitkeep
+!wc/uploads/banners/.htaccess
+wc/uploads/profiles/*
+!wc/uploads/profiles/.gitkeep
+!wc/uploads/profiles/.htaccess
+wc/uploads/vision_missions/*
+!wc/uploads/vision_missions/.gitkeep
+!wc/uploads/vision_missions/.htaccess
+wc/uploads/features/*
+!wc/uploads/features/.gitkeep
+!wc/uploads/features/.htaccess

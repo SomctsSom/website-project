@@ -13,6 +13,8 @@ declare(strict_types=1);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $pageTitle ?> · <?= $appName ?></title>
     <link rel="stylesheet" href="<?= wa_e(wa_url('/assets/css/admin.css')) ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
 <?php if ($user): ?>

@@ -38,6 +38,10 @@ return [
         'admin_pages',
         'hero',
         'services',
+        'profile_overviews',
+        'vision_missions',
+        'features',
+        'navbar_colors',
         'trash',
         'audit_logs',
         'account',
@@ -47,6 +51,7 @@ return [
         'default',
         'about',
         'contact',
+        'services',
     ],
     'reserved_slugs' => [
         'api', 'admin', 'login', 'logout', 'media', 'uploads', 'assets',

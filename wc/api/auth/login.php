@@ -4,14 +4,15 @@ declare(strict_types=1);
 require_method('POST');
 
 $input = request_input();
-$email = strtolower(trim((string) ($input['email'] ?? '')));
+$login = trim((string) ($input['login'] ?? $input['email'] ?? $input['username'] ?? ''));
 $password = (string) ($input['password'] ?? '');
 
-if ($email === '' || $password === '') {
-    json_error('Email and password are required', 422);
+if ($login === '' || $password === '') {
+    json_error('Name or email and password are required', 422);
 }
 
-if (auth_login_rate_limited($email)) {
+$loginKey = strtolower($login);
+if (auth_login_rate_limited($loginKey)) {
     json_error('Too many login attempts. Try again later.', 429);
 }
 
@@ -20,24 +21,33 @@ $stmt = $pdo->prepare(
     'SELECT u.*, r.code AS role_code, r.name AS role_name
      FROM users u
      JOIN roles r ON r.id = u.role_id AND r.deleted_at IS NULL
-     WHERE u.email_active = :email
+     WHERE u.deleted_at IS NULL
+       AND (LOWER(u.email) = :login_a OR LOWER(u.name) = :login_b)
+     ORDER BY CASE WHEN LOWER(u.email) = :login_c THEN 0 ELSE 1 END
      LIMIT 1'
 );
-$stmt->execute([':email' => $email]);
+$stmt->execute([
+    ':login_a' => $loginKey,
+    ':login_b' => $loginKey,
+    ':login_c' => $loginKey,
+]);
 $user = $stmt->fetch();
 
 if (!$user || (int) $user['is_active'] !== 1 || !password_verify($password, $user['password_hash'])) {
-    auth_record_login_attempt($email, false);
+    auth_record_login_attempt($loginKey, false);
     json_error('Invalid credentials', 401);
 }
 
-auth_record_login_attempt($email, true);
+auth_record_login_attempt($loginKey, true);
 
 $pdo->prepare('UPDATE users SET last_login_at = :t WHERE id = :id')
     ->execute([':t' => now_utc(), ':id' => $user['id']]);
 
 $session = auth_create_session((int) $user['id']);
-audit_log((int) $user['id'], 'login', 'users', (int) $user['id'], ['email' => $email]);
+audit_log((int) $user['id'], 'login', 'users', (int) $user['id'], [
+    'login' => $login,
+    'email' => $user['email'],
+]);
 
 json_ok([
     'token' => $session['token'],

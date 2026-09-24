@@ -22,6 +22,10 @@ $permMap = [
     '/admin-pages' => 'pages.view',
     '/hero' => 'hero.view',
     '/services' => 'services.view',
+    '/profile-overviews' => 'profile_overviews.view',
+    '/vision-missions' => 'vision_missions.view',
+    '/features' => 'features.view',
+    '/navbar-colors' => 'navbar_colors.view',
     '/trash' => 'trash.view',
     '/audit-logs' => 'audit.view',
 ];

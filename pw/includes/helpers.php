@@ -34,6 +34,12 @@ function pw_e(?string $v): string
     return htmlspecialchars((string) $v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+/** Trusted/sanitized rich HTML from Core (already allowlisted). */
+function pw_rich(?string $html): string
+{
+    return (string) $html;
+}
+
 function pw_api(string $path, array $query = []): array
 {
     $base = rtrim((string) pw_env('WC_API_URL', 'http://127.0.0.1:8090'), '/');

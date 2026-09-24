@@ -41,9 +41,9 @@ function wa_require_perm(string $permission): void
     }
 }
 
-function wa_login(string $email, string $password): array
+function wa_login(string $login, string $password): array
 {
-    $res = wa_api('POST', '/api/auth/login', ['email' => $email, 'password' => $password]);
+    $res = wa_api('POST', '/api/auth/login', ['login' => $login, 'password' => $password]);
     if (!wa_api_ok($res)) {
         return $res;
     }

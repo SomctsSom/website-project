@@ -10,20 +10,11 @@ CREATE TABLE IF NOT EXISTS site_settings (
     PRIMARY KEY (setting_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Seed global size from any existing per-hero value (prefer lg/xl if present), else md
-SET @seed_size := (
-    SELECT size_preset FROM hero
-    WHERE deleted_at IS NULL
-    ORDER BY FIELD(size_preset, 'xl', 'lg', 'md', 'sm') ASC, id ASC
-    LIMIT 1
-);
-SET @seed_size := IFNULL(@seed_size, 'md');
-
 INSERT INTO site_settings (setting_key, setting_value, updated_at)
-VALUES ('hero_size_preset', @seed_size, UTC_TIMESTAMP())
+VALUES ('hero_size_preset', 'md', UTC_TIMESTAMP())
 ON DUPLICATE KEY UPDATE setting_key = setting_key;
 
--- Drop per-hero size column (global setting replaces it)
+-- Drop legacy per-hero size column if present
 SET @col_exists := (
     SELECT COUNT(*) FROM information_schema.COLUMNS
     WHERE TABLE_SCHEMA = DATABASE()
