@@ -26,6 +26,12 @@ $permMap = [
     '/vision-missions' => 'vision_missions.view',
     '/features' => 'features.view',
     '/navbar-colors' => 'navbar_colors.view',
+    '/footer-colors' => 'footer_colors.view',
+    '/website-header' => 'website_header.view',
+    '/contact-form' => 'contact_form.view',
+    '/contact-inquiries' => 'contact_inquiries.view',
+    '/testimonials' => 'testimonials.view',
+    '/contact-social' => 'contact_social.view',
     '/trash' => 'trash.view',
     '/audit-logs' => 'audit.view',
 ];

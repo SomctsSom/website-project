@@ -39,6 +39,44 @@ $bannerSizePreset = normalize_hero_size_preset(
     (string) ($input['banner_size_preset'] ?? ($existing['banner_size_preset'] ?? 'md'))
 );
 $bannerImagePath = $existing['banner_image_path'] ?? null;
+$pageBgColor = null;
+$cardBgColor = null;
+if ($pageType === 'website') {
+    if (array_key_exists('bg_color', $input) || array_key_exists('clear_bg_color', $input)) {
+        if (!empty($input['clear_bg_color'])) {
+            $pageBgColor = null;
+        } else {
+            $rawBg = trim((string) ($input['bg_color'] ?? ''));
+            $pageBgColor = $rawBg !== ''
+                ? sanitize_navbar_hex($rawBg, (string) ($existing['bg_color'] ?? '#f2ebe0'))
+                : null;
+        }
+    } else {
+        $pageBgColor = $existing['bg_color'] ?? null;
+        if ($pageBgColor !== null && $pageBgColor !== '') {
+            $pageBgColor = sanitize_navbar_hex($pageBgColor, '#f2ebe0');
+        } else {
+            $pageBgColor = null;
+        }
+    }
+    if (array_key_exists('card_bg_color', $input) || array_key_exists('clear_card_bg_color', $input)) {
+        if (!empty($input['clear_card_bg_color'])) {
+            $cardBgColor = null;
+        } else {
+            $rawCard = trim((string) ($input['card_bg_color'] ?? ''));
+            $cardBgColor = $rawCard !== ''
+                ? sanitize_navbar_hex($rawCard, (string) ($existing['card_bg_color'] ?? '#ffffff'))
+                : null;
+        }
+    } else {
+        $cardBgColor = $existing['card_bg_color'] ?? null;
+        if ($cardBgColor !== null && $cardBgColor !== '') {
+            $cardBgColor = sanitize_navbar_hex($cardBgColor, '#ffffff');
+        } else {
+            $cardBgColor = null;
+        }
+    }
+}
 
 if ($title === '' || $slug === '') {
     json_error('Title and slug are required', 422);
@@ -79,7 +117,7 @@ if ($pageType === 'website' && !empty($input['clear_banner_image'])) {
 $pdo->prepare(
     'UPDATE pages SET title = :title, slug = :slug, template_key = :tk,
      banner_eyebrow = :be, banner_title = :bt, banner_subtitle = :bs, banner_image_path = :bi,
-     banner_enabled = :ben, banner_size_preset = :bsp,
+     banner_enabled = :ben, banner_size_preset = :bsp, bg_color = :bg, card_bg_color = :cbg,
      is_active = :active, updated_at = :u, updated_by = :by WHERE id = :id'
 )->execute([
     ':title' => $title,
@@ -91,6 +129,8 @@ $pdo->prepare(
     ':bi' => $bannerImagePath,
     ':ben' => $pageType === 'website' ? $bannerEnabled : 0,
     ':bsp' => $pageType === 'website' ? $bannerSizePreset : 'md',
+    ':bg' => $pageType === 'website' ? $pageBgColor : null,
+    ':cbg' => $pageType === 'website' ? $cardBgColor : null,
     ':active' => $isActive,
     ':u' => now_utc(),
     ':by' => $actor['id'],
@@ -128,6 +168,18 @@ if (is_array($menuIds)) {
         $pdo->prepare(
             'INSERT INTO menu_pages (menu_id, page_id, sort_order, created_at, created_by) VALUES (:m, :p, 0, :c, :by)'
         )->execute([':m' => $mid, ':p' => $id, ':c' => now_utc(), ':by' => $actor['id']]);
+    }
+}
+
+if ($pageType === 'website' && array_key_exists('sections_json', $input)) {
+    $sections = json_decode((string) ($input['sections_json'] ?? '[]'), true);
+    if (!is_array($sections)) {
+        json_error('Invalid sections_json', 422);
+    }
+    try {
+        sync_page_section_order($pdo, $id, $sections, (int) $actor['id']);
+    } catch (Throwable $e) {
+        json_error($e->getMessage(), 422);
     }
 }
 

@@ -128,6 +128,44 @@ try {
         // Navbar colors
         'GET /api/navbar-colors' => 'navbar_colors/index.php',
         'POST /api/navbar-colors' => 'navbar_colors/index.php',
+        'GET /api/footer-colors' => 'footer_colors/index.php',
+        'POST /api/footer-colors' => 'footer_colors/index.php',
+        'GET /api/website-header' => 'website_header/index.php',
+        'POST /api/website-header' => 'website_header/index.php',
+        'GET /api/contact-form' => 'contact_form/index.php',
+        'POST /api/contact-form' => 'contact_form/index.php',
+        'POST /api/contact-form/pages' => 'contact_form/pages.php',
+        'GET /api/contact-form/fields' => 'contact_form/fields_list.php',
+        'POST /api/contact-form/fields' => 'contact_form/fields_create.php',
+        'POST /api/contact-form/fields/update' => 'contact_form/fields_update.php',
+        'POST /api/contact-form/fields/delete' => 'contact_form/fields_delete.php',
+        'GET /api/contact-inquiries' => 'contact_inquiries/list.php',
+        'GET /api/contact-inquiries/view' => 'contact_inquiries/view.php',
+        'POST /api/contact-inquiries/update' => 'contact_inquiries/update.php',
+        'POST /api/contact-inquiries/delete' => 'contact_inquiries/delete.php',
+
+        // Testimonials
+        'GET /api/testimonials' => 'testimonials/list.php',
+        'GET /api/testimonials/view' => 'testimonials/view.php',
+        'POST /api/testimonials/create' => 'testimonials/create.php',
+        'POST /api/testimonials/update' => 'testimonials/update.php',
+        'POST /api/testimonials/delete' => 'testimonials/delete.php',
+        'POST /api/testimonials/restore' => 'testimonials/restore.php',
+        'POST /api/testimonials/reorder' => 'testimonials/reorder.php',
+
+        // Contact & Social
+        'GET /api/social-links' => 'social_links/list.php',
+        'GET /api/social-links/view' => 'social_links/view.php',
+        'POST /api/social-links/create' => 'social_links/create.php',
+        'POST /api/social-links/update' => 'social_links/update.php',
+        'POST /api/social-links/delete' => 'social_links/delete.php',
+        'POST /api/social-links/restore' => 'social_links/restore.php',
+        'GET /api/contact-infos' => 'contact_infos/list.php',
+        'GET /api/contact-infos/view' => 'contact_infos/view.php',
+        'POST /api/contact-infos/create' => 'contact_infos/create.php',
+        'POST /api/contact-infos/update' => 'contact_infos/update.php',
+        'POST /api/contact-infos/delete' => 'contact_infos/delete.php',
+        'POST /api/contact-infos/restore' => 'contact_infos/restore.php',
 
         // Trash & Audit
         'GET /api/trash' => 'trash/list.php',
@@ -147,6 +185,12 @@ try {
         'GET /api/public/vision-missions' => 'public/vision_missions.php',
         'GET /api/public/features' => 'public/features.php',
         'GET /api/public/navbar-colors' => 'public/navbar_colors.php',
+        'GET /api/public/footer-colors' => 'public/footer_colors.php',
+        'GET /api/public/website-header' => 'public/website_header.php',
+        'GET /api/public/testimonials' => 'public/testimonials.php',
+        'GET /api/public/contact-social' => 'public/contact_social.php',
+        'GET /api/public/contact-form' => 'public/contact_form.php',
+        'POST /api/public/contact-inquiry' => 'public/contact_inquiry.php',
     ];
 
     $routeKey = request_method() . ' ' . $path;

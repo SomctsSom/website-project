@@ -20,6 +20,9 @@ $map = [
     'profile_overviews' => ['perm' => 'profile_overviews.restore', 'endpoint_hint' => 'profile-overviews'],
     'vision_missions' => ['perm' => 'vision_missions.restore', 'endpoint_hint' => 'vision-missions'],
     'features' => ['perm' => 'features.restore', 'endpoint_hint' => 'features'],
+    'testimonials' => ['perm' => 'testimonials.restore', 'endpoint_hint' => 'testimonials'],
+    'social_links' => ['perm' => 'contact_social.restore', 'endpoint_hint' => 'social-links'],
+    'contact_infos' => ['perm' => 'contact_social.restore', 'endpoint_hint' => 'contact-infos'],
 ];
 
 if (!isset($map[$module]) || $id < 1) {

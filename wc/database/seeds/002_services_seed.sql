@@ -61,15 +61,15 @@ WHERE NOT EXISTS (
 );
 
 INSERT INTO menus (menu_type, parent_menu_id, title, icon, url, sort_order, is_active, created_at)
-SELECT 'admin', parent.id, 'Services', NULL, '/services', 40, 1, UTC_TIMESTAMP()
+SELECT 'admin', parent.id, 'Services', NULL, '/services', 20, 1, UTC_TIMESTAMP()
 FROM menus parent
 WHERE parent.menu_type = 'admin'
-  AND parent.title = 'Website Management'
+  AND parent.title = 'Website Content'
   AND parent.parent_menu_id IS NULL
   AND parent.deleted_at IS NULL
   AND NOT EXISTS (
       SELECT 1 FROM menus m
-      WHERE m.menu_type = 'admin' AND m.parent_menu_id = parent.id AND m.title = 'Services' AND m.deleted_at IS NULL
+      WHERE m.menu_type = 'admin' AND m.title = 'Services' AND m.deleted_at IS NULL
   );
 
 INSERT INTO menu_pages (menu_id, page_id, sort_order, created_at)

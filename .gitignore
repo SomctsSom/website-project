@@ -28,3 +28,6 @@ wc/uploads/vision_missions/*
 wc/uploads/features/*
 !wc/uploads/features/.gitkeep
 !wc/uploads/features/.htaccess
+wc/uploads/contact_logos/*
+!wc/uploads/contact_logos/.gitkeep
+!wc/uploads/contact_logos/.htaccess

@@ -20,6 +20,9 @@ $allowed = [
     'profile_overviews' => ['table' => 'profile_overviews', 'label' => 'title', 'extra' => 'image_top_path'],
     'vision_missions' => ['table' => 'vision_missions', 'label' => 'title', 'extra' => 'statement_type'],
     'features' => ['table' => 'features', 'label' => 'title', 'extra' => 'description'],
+    'testimonials' => ['table' => 'testimonials', 'label' => 'author_name', 'extra' => 'quote'],
+    'social_links' => ['table' => 'social_links', 'label' => 'label', 'extra' => 'link_url'],
+    'contact_infos' => ['table' => 'contact_infos', 'label' => 'company_summary', 'extra' => 'id'],
 ];
 
 if (!isset($allowed[$module])) {

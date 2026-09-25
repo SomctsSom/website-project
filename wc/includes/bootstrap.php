@@ -19,6 +19,12 @@ require_once __DIR__ . '/profile_overview_helpers.php';
 require_once __DIR__ . '/vision_mission_helpers.php';
 require_once __DIR__ . '/feature_helpers.php';
 require_once __DIR__ . '/navbar_helpers.php';
+require_once __DIR__ . '/footer_helpers.php';
+require_once __DIR__ . '/header_helpers.php';
+require_once __DIR__ . '/testimonial_helpers.php';
+require_once __DIR__ . '/contact_social_helpers.php';
+require_once __DIR__ . '/contact_form_helpers.php';
+require_once __DIR__ . '/page_section_helpers.php';
 
 // Ensure app config is loaded via helper
 app_config();
