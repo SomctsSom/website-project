@@ -39,7 +39,7 @@ ob_start();
 <div class="page-head">
   <div>
     <h1>Navbar Colors</h1>
-    <p>Control public website navbar colors and the background color for all pages.</p>
+    <p>Control public website navbar colors and the default page background.</p>
   </div>
 </div>
 <?php if ($error): ?><div class="alert alert-error"><?= wa_e($error) ?></div><?php endif; ?>
@@ -63,10 +63,12 @@ ob_start();
       <input type="color" name="active_color" value="<?= wa_e((string)$colors['active_color']) ?>" <?= wa_can('navbar_colors.edit') ? '' : 'disabled' ?>>
       <input type="text" value="<?= wa_e((string)$colors['active_color']) ?>" readonly style="margin-top:0.35rem">
     </label>
-    <label class="full">All pages background color
+    <label class="full">Default page background color
       <input type="color" name="page_bg_color" value="<?= wa_e((string)$colors['page_bg_color']) ?>" <?= wa_can('navbar_colors.edit') ? '' : 'disabled' ?>>
       <input type="text" value="<?= wa_e((string)$colors['page_bg_color']) ?>" readonly style="margin-top:0.35rem;max-width:8rem">
-      <span class="muted" style="display:block;margin-top:0.35rem">Applies to every public page body background.</span>
+      <span class="muted" style="display:block;margin-top:0.35rem">
+        Used when a page has no own color. Set a color per page under Website pages → Edit page → Page background color.
+      </span>
     </label>
     <div class="full" style="padding:1rem;border:1px solid #ddd;border-radius:10px;background:<?= (int)$colors['transparent']===1 ? 'url(data:image/svg+xml,' . rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="20" height="20" fill="#ccc"/><rect x="20" y="20" width="20" height="20" fill="#ccc"/><rect x="20" width="20" height="20" fill="#eee"/><rect y="20" width="20" height="20" fill="#eee"/></svg>') . ') center/20px 20px' : wa_e((string)$colors['bg_color']) ?>;color:<?= wa_e((string)$colors['menu_color']) ?>">
       <strong>Navbar preview<?= (int)$colors['transparent']===1 ? ' (transparent)' : '' ?></strong>
@@ -77,8 +79,8 @@ ob_start();
       </div>
     </div>
     <div class="full" style="padding:1rem;border:1px solid #ddd;border-radius:10px;background:<?= wa_e((string)$colors['page_bg_color']) ?>">
-      <strong>Page background preview</strong>
-      <p class="muted" style="margin:0.5rem 0 0">This color fills behind page content on all public pages.</p>
+      <strong>Default page background preview</strong>
+      <p class="muted" style="margin:0.5rem 0 0">Fallback body color for pages that use “site default”.</p>
     </div>
     <?php if (wa_can('navbar_colors.edit')): ?>
       <div class="actions full"><button class="btn" type="submit">Save colors</button></div>

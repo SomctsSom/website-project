@@ -64,6 +64,35 @@ function pw_api(string $path, array $query = []): array
     return $decoded;
 }
 
+/**
+ * @param array<string,mixed> $data
+ */
+function pw_api_post(string $path, array $data = []): array
+{
+    $base = rtrim((string) pw_env('WC_API_URL', 'http://127.0.0.1:8090'), '/');
+    $url = $base . '/' . ltrim($path, '/');
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => http_build_query($data),
+        CURLOPT_HTTPHEADER => [
+            'Accept: application/json',
+            'Content-Type: application/x-www-form-urlencoded',
+        ],
+        CURLOPT_TIMEOUT => 20,
+    ]);
+    $body = curl_exec($ch);
+    $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    $decoded = json_decode((string) $body, true);
+    if (!is_array($decoded)) {
+        return ['success' => false, 'message' => 'API error', 'http_status' => $status];
+    }
+    $decoded['http_status'] = $status;
+    return $decoded;
+}
+
 function pw_url(string $path = '/'): string
 {
     $base = rtrim((string) pw_env('PW_BASE_URL', ''), '/');

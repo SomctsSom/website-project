@@ -194,19 +194,34 @@ WHERE NOT EXISTS (
     SELECT 1 FROM menus m WHERE m.menu_type = 'admin' AND m.title = 'System Operations' AND m.parent_menu_id IS NULL AND m.deleted_at IS NULL
 );
 
--- Admin submenus under Website Management
+-- Admin submenus under Website Management (structure only)
 INSERT INTO menus (menu_type, parent_menu_id, title, icon, url, sort_order, is_active, created_at)
 SELECT 'admin', parent.id, child.title, NULL, child.url, child.sort_order, 1, UTC_TIMESTAMP()
 FROM menus parent
 JOIN (
     SELECT 'Website Menus' AS title, '/website-menus' AS url, 10 AS sort_order UNION ALL
-    SELECT 'Website Pages', '/website-pages', 20 UNION ALL
-    SELECT 'Hero', '/hero', 30
+    SELECT 'Website Pages', '/website-pages', 20
 ) AS child
 WHERE parent.menu_type = 'admin' AND parent.title = 'Website Management' AND parent.parent_menu_id IS NULL AND parent.deleted_at IS NULL
   AND NOT EXISTS (
       SELECT 1 FROM menus m
       WHERE m.menu_type = 'admin' AND m.parent_menu_id = parent.id AND m.title = child.title AND m.deleted_at IS NULL
+  );
+
+-- Website Content group (sections, colors, contact)
+INSERT INTO menus (menu_type, parent_menu_id, title, icon, url, sort_order, is_active, created_at)
+SELECT 'admin', NULL, 'Website Content', 'content', NULL, 22, 1, UTC_TIMESTAMP()
+WHERE NOT EXISTS (
+    SELECT 1 FROM menus m WHERE m.menu_type = 'admin' AND m.title = 'Website Content' AND m.parent_menu_id IS NULL AND m.deleted_at IS NULL
+);
+
+INSERT INTO menus (menu_type, parent_menu_id, title, icon, url, sort_order, is_active, created_at)
+SELECT 'admin', parent.id, 'Hero', NULL, '/hero', 10, 1, UTC_TIMESTAMP()
+FROM menus parent
+WHERE parent.menu_type = 'admin' AND parent.title = 'Website Content' AND parent.parent_menu_id IS NULL AND parent.deleted_at IS NULL
+  AND NOT EXISTS (
+      SELECT 1 FROM menus m
+      WHERE m.menu_type = 'admin' AND m.title = 'Hero' AND m.url = '/hero' AND m.deleted_at IS NULL
   );
 
 -- Admin submenus under Access Control
